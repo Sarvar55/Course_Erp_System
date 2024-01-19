@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: local
+  liquibase:
+    change-log: classpath:migrations/changelog-master.xml
+    enabled: true
+
+# burada liquibase eneble:true olmas?na dikkat etmek laz?m sebeb buras? common file gibi bir yer
+# her zaman buras? da okunur burada true ile prod,dev,test hepsinde true olmu? olucak bunu her birinde ayarlamak çok daha düzgün bir yakla??m olucakt?r.
