@@ -4,8 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <settings>
-        <setting name="defaultStatementTimeout" value="60"/> <!-- seconds -->
+        <setting name="defaultStatementTimeout" value="60"/> <!-- eğer response time 60s daha fazla olursa o zaman session kapanır-->
         <!--        <setting name="jdbcTypeForNull" value="NULL"/>-->
-        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="mapUnderscoreToCamelCase" value="true"/><!--phone_number=> phoneNumber-->
+
     </settings>
 </configuration>

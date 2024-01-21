@@ -4,6 +4,9 @@ spring:
   liquibase:
     change-log: classpath:migrations/changelog-master.xml
     enabled: true
-
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mappers/*.xml
+  type-aliases-package: com.erp.erpbackend.models.mybatis
 # burada liquibase eneble:true olmas?na dikkat etmek laz?m sebeb buras? common file gibi bir yer
-# her zaman buras? da okunur burada true ile prod,dev,test hepsinde true olmu? olucak bunu her birinde ayarlamak çok daha düzgün bir yakla??m olucakt?r.
+# her zaman buras? da okunur burada true ile prod,dev,test hepsinde true olmu? olucak bunu her birinde ayarlamak ï¿½ok daha dï¿½zgï¿½n bir yakla??m olucakt?r.

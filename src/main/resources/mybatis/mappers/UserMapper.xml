@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.erp.erpbackend.repository.UserRepository">
+<!--    burada values kısmı User type içinde olan getter metodlarını alıro yani burada camelcase kullanmak lazım(clas içinde olan field name gibi) -->
+<!--    There is no getter for property named 'role_id' in 'class com.erp.erpbackend.models.mybatis.user.User yoksa bu hata alınır-->
+<!--Indi ise bele bir senoryo düşünelim ki, bu senaryoda biz ilk önce user'in adresini save edib daha sonra ise ordan gelen
+ id col'nu alıb user tablsunda set edeceyik bunu bizim ucun hibernate auto olarak kendisi ediryor. bunun için yapmamız gereken
+ useGeneratedKeys="true"
+ keyColumn="id" source column from db,(aynı olamk zorunda eger user_id ise o zaman user_id )
+ keyProperty="id" soruce colum from models (aynı olmak zorunda eger userId ise o zaman userId)
+ yani db den geleni alıp digerine set ediyor
+ -->
+    <insert id="insert" parameterType="User" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+            INSERT INTO users(name,surname,status,role_id,email,phone_number,password)
+            VALUES (#{name},#{surname},#{status},#{roleId},#{email},#{phoneNumber},#{password})
+    </insert>
+
+</mapper>
