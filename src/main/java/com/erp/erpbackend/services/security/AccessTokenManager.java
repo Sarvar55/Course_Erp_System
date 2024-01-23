@@ -1,9 +1,11 @@
 package com.erp.erpbackend.services.security;
 
+import com.erp.erpbackend.constants.TokenConstants;
 import com.erp.erpbackend.models.mybatis.user.User;
 import com.erp.erpbackend.models.porperties.security.SecurityProperties;
 import com.erp.erpbackend.services.base.TokenGenerator;
 import com.erp.erpbackend.services.base.TokenReader;
+import com.erp.erpbackend.services.getters.EmailGetter;
 import com.erp.erpbackend.utils.PublicPrivateKeyUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,7 +22,8 @@ import java.util.Date;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class AccessTokenManager implements TokenGenerator<User>, TokenReader<Claims> {
+public class AccessTokenManager implements TokenGenerator<User>,
+        TokenReader<Claims>, EmailGetter {
 
     private final SecurityProperties securityProperties;
 
@@ -28,7 +31,7 @@ public class AccessTokenManager implements TokenGenerator<User>, TokenReader<Cla
     public String generate(User obj) {
 
         Claims claims = Jwts.claims();
-        claims.put("email", obj.getEmail());
+        claims.put(TokenConstants.EMAIL, obj.getEmail());
 
         Date now = new Date();
         Date exp = new Date(now.getTime() + securityProperties.getJwt().getAccessTokenValidityTime());
@@ -47,5 +50,10 @@ public class AccessTokenManager implements TokenGenerator<User>, TokenReader<Cla
     public Claims read(String token) {
         return Jwts.parserBuilder().setSigningKey(PublicPrivateKeyUtils.getPublicKey())
                 .build().parseClaimsJws(token).getBody();
+    }
+
+    @Override
+    public String getEmail(String token) {
+        return read(token).get(TokenConstants.EMAIL, String.class);
     }
 }

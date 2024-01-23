@@ -20,4 +20,7 @@ public class BaseResponse<T> {
                 .message("Success").data(data).build();
     }
 
+    public static <T> BaseResponse<T> success() {
+        return success(null);
+    }
 }
