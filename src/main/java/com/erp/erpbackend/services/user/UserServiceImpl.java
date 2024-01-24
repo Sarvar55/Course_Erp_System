@@ -1,5 +1,6 @@
 package com.erp.erpbackend.services.user;
 
+import com.erp.erpbackend.exception.BaseException;
 import com.erp.erpbackend.models.mybatis.user.User;
 import com.erp.erpbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(
-                () -> new RuntimeException("User Not found")
+                () -> BaseException.notFound(User.class.getSimpleName(), "email", email)
         );
     }
 }

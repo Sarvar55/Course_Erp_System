@@ -17,8 +17,8 @@ import java.util.Base64;
 @SpringBootApplication
 public class CourseErpBackendApplication implements CommandLineRunner {
 
-    @Autowired
-    private UserRepository userRepository;
+//    @Autowired
+//    private UserRepository userRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(CourseErpBackendApplication.class, args);
@@ -28,7 +28,7 @@ public class CourseErpBackendApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-        keyGenerator.initialize(2048);
+        keyGenerator.initialize(2048);  
 
         KeyPair kp = keyGenerator.genKeyPair();
         PublicKey publicKey = (PublicKey) kp.getPublic();
