@@ -40,7 +40,6 @@ public class AccessTokenManager implements TokenGenerator<User>,
                 .setSubject(String.valueOf(obj.getId()))
                 .signWith(PublicPrivateKeyUtils.getPrivateKey(), SignatureAlgorithm.RS256)
                 .compact();
-
     }
 
     @Override

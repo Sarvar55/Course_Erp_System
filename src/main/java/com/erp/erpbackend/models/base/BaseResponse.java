@@ -29,7 +29,9 @@ public class BaseResponse<T> {
         String message;
 
         public static Meta of(String key, String message) {
-            return Meta.builder().message(message).key(key)
+            return Meta.builder()
+                    .message(message)
+                    .key(key)
                     .build();
         }
 
@@ -43,8 +45,11 @@ public class BaseResponse<T> {
     }
 
     public static <T> BaseResponse<T> success(T data) {
-        return BaseResponse.<T>builder().status(HttpStatus.OK)
-                .meta(Meta.of(SUCCESS)).data(data).build();
+        return BaseResponse.<T>builder()
+                .status(HttpStatus.OK)
+                .meta(Meta.of(SUCCESS))
+                .data(data)
+                .build();
     }
 
     public static <T> BaseResponse<T> success() {
@@ -52,7 +57,8 @@ public class BaseResponse<T> {
     }
 
     public static BaseResponse<?> error(BaseException e) {
-        return BaseResponse.builder().meta(Meta.of(e))
+        return BaseResponse.builder()
+                .meta(Meta.of(e))
                 .status(e.getResponseMessage().status())
                 .build();
     }

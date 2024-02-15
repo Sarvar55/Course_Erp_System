@@ -9,6 +9,7 @@ import java.util.Optional;
 @Mapper
 public interface UserRepository {
     void insert(User user);
-//burada olan @Param("email") mybatis tarafında match işlemi için kullanılıyor. burada ne yazıldıysa diger tarafda da parametre olarak onu almak lazım
+
+    //burada olan @Param("email") mybatis tarafında match işlemi için kullanılıyor. burada ne yazıldıysa diger tarafda da parametre olarak onu almak lazım
     Optional<User> findByEmail(@Param("email") String email);
 }

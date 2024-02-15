@@ -3,6 +3,7 @@ package com.erp.erpbackend.controller;
 import com.erp.erpbackend.models.base.BaseResponse;
 import com.erp.erpbackend.models.payload.auth.LoginPayload;
 import com.erp.erpbackend.models.payload.auth.RefreshTokenPayload;
+import com.erp.erpbackend.models.payload.auth.SignUpPayload;
 import com.erp.erpbackend.models.response.LoginResponse;
 import com.erp.erpbackend.services.security.AuthBusinessService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,12 @@ public class AuthController {
     @PostMapping("/logout")
     public BaseResponse<Void> logout() {
         authBusinessService.logout();
+        return BaseResponse.success();
+    }
 
+    @PostMapping("/sign-up")
+    public BaseResponse<Void> signUp(@RequestBody SignUpPayload payload) {
+        authBusinessService.signUp(payload);
         return BaseResponse.success();
     }
 }

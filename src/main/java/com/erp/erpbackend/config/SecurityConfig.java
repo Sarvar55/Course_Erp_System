@@ -1,6 +1,8 @@
 package com.erp.erpbackend.config;
 
+import com.erp.erpbackend.exception.BaseException;
 import com.erp.erpbackend.filters.AuthorizationFilter;
+import com.erp.erpbackend.models.enums.response.ErrorResponseMessages;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -46,8 +48,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -83,8 +84,8 @@ public class SecurityConfig {
     @Slf4j
     public static class AuthEntryPoint implements AuthenticationEntryPoint {
 
-        @Qualifier("handlerExceptionResolver")
-        private final HandlerExceptionResolver resolver;
+//        @Qualifier("handlerExceptionResolver")
+//        private final HandlerExceptionResolver resolver;
 
         @Override
         public void commence(HttpServletRequest request,
@@ -92,8 +93,9 @@ public class SecurityConfig {
                              AuthenticationException authException) throws IOException, ServletException {
 
             authException.printStackTrace();
-           // resolver.resolveException(request, response, null, BaseException.of(ErrorResponseMessages.FORBIDDEN));
+            //resolver.resolveException(request, response, null, BaseException.of(ErrorResponseMessages.UNEXPECTED));
         }
     }
-
 }
+
+
