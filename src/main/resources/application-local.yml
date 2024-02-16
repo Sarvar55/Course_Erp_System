@@ -5,6 +5,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/course_erp_db
     username: postgres
     password: 2002
+  redis:
+    redisson:
+      file: classpath:redisson.yml
 
 security:
   jwt:
@@ -16,7 +19,8 @@ security:
 otp:
   jwt:
     secret-key: 12ab7fc55a99b439e2c9ede549e8770695358a549a39938aa737b2b8afdd11d945d0512c5aff957e330cc42441f307f0669145507ec93386c73f16781ebe5f62
-  validity-time: 300000 # 5 minutes
+    validity-time: 300000 # 5 minutes
+
 
 springdoc:
   api-docs:

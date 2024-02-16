@@ -2,6 +2,7 @@ package com.erp.erpbackend.services.security;
 
 import com.erp.erpbackend.exception.BaseException;
 import com.erp.erpbackend.models.dto.RefreshTokenDto;
+import com.erp.erpbackend.models.dto.SendOTPDto;
 import com.erp.erpbackend.models.enums.branch.BranchStatus;
 import com.erp.erpbackend.models.mappers.CourseEntityMapper;
 import com.erp.erpbackend.models.mappers.UserEntityMapper;
@@ -13,10 +14,13 @@ import com.erp.erpbackend.models.mybatis.user.User;
 import com.erp.erpbackend.models.payload.auth.LoginPayload;
 import com.erp.erpbackend.models.payload.auth.RefreshTokenPayload;
 import com.erp.erpbackend.models.payload.auth.SignUpPayload;
+import com.erp.erpbackend.models.payload.otp.OtpPayload;
+import com.erp.erpbackend.models.payload.otp.SignUpOTPRequest;
 import com.erp.erpbackend.models.response.LoginResponse;
 import com.erp.erpbackend.services.branch.BranchService;
 import com.erp.erpbackend.services.course.CourseService;
 import com.erp.erpbackend.services.employee.EmployeeService;
+import com.erp.erpbackend.services.otp.OptFactory;
 import com.erp.erpbackend.services.role.RoleService;
 import com.erp.erpbackend.services.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +44,8 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
     private final static String BRANCH_NAME_DEFAULT_PATTERN = "%s Default Branch";
 
     private final AuthenticationManager authenticationManager;
-    private final AccessTokenManager accessTokenManager;
     private final RefreshTokenManager refreshTokenManager;
+    private final AccessTokenManager accessTokenManager;
     private final UserDetailsService userDetailsService;
     private final EmployeeService employeeService;
     private final PasswordEncoder passwordEncoder;
@@ -100,7 +104,11 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
         employeeService.insert(Employee.builder().userId(user.getId()).build());
 
 
+    }
 
+    @Override
+    public void signUpOTP(OtpPayload payload) {
+        OptFactory.handle(payload.getChannel()).send(SendOTPDto.of("user","key"));
     }
 
     @Override
@@ -112,6 +120,12 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
         );
     }
 
+    @Override
+    public void signUpOTPConfirmation(SignUpOTPRequest payload) {
+        log.info(payload.getOtp() + "confirmed");
+
+    }
+
     //private util methods
 
 
@@ -121,7 +135,9 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
                     new UsernamePasswordAuthenticationToken(loginPayload.getEmail(), loginPayload.getPassword())
             );
         } catch (AuthenticationException e) {
-            throw new RuntimeException(e.getMessage());
+            throw (e.getCause() instanceof BaseException)
+                    ? (BaseException) e.getCause()
+                    : BaseException.unexpected();
         }
     }
 

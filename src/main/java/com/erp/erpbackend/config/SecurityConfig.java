@@ -84,8 +84,8 @@ public class SecurityConfig {
     @Slf4j
     public static class AuthEntryPoint implements AuthenticationEntryPoint {
 
-//        @Qualifier("handlerExceptionResolver")
-//        private final HandlerExceptionResolver resolver;
+        @Qualifier("handlerExceptionResolver")
+        private final HandlerExceptionResolver resolver;
 
         @Override
         public void commence(HttpServletRequest request,
@@ -93,7 +93,7 @@ public class SecurityConfig {
                              AuthenticationException authException) throws IOException, ServletException {
 
             authException.printStackTrace();
-            //resolver.resolveException(request, response, null, BaseException.of(ErrorResponseMessages.UNEXPECTED));
+            resolver.resolveException(request, response, null, BaseException.of(ErrorResponseMessages.FORBIDDEN));
         }
     }
 }
