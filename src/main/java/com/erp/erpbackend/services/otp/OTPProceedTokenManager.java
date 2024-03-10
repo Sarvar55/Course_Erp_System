@@ -48,7 +48,6 @@ public class OTPProceedTokenManager implements TokenGenerator<User>, TokenReader
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = otpProperties.getOtpJwtData().getSecretKey().getBytes(StandardCharsets.UTF_8);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(otpProperties.getOtpJwtData().getSecretKey().getBytes(StandardCharsets.UTF_8));
     }
 }
