@@ -28,7 +28,7 @@ public class OTPProceedTokenManager implements TokenGenerator<User>, TokenReader
     @Override
     public String generate(User obj) {
         Claims claims = Jwts.claims();
-        claims.put(TokenConstants.EMAIL, obj.getEmail());
+        claims.put("type", "OTP_PROCEED_KEY");
 
         Date now = new Date();
         Date exp = new Date(now.getTime() + otpProperties.getValidityTime());
@@ -44,7 +44,8 @@ public class OTPProceedTokenManager implements TokenGenerator<User>, TokenReader
 
     @Override
     public Claims read(String token) {
-        return null;
+        return Jwts.parserBuilder().setSigningKey(getSigningKey())
+                .build().parseClaimsJws(token).getBody();
     }
 
     private Key getSigningKey() {
