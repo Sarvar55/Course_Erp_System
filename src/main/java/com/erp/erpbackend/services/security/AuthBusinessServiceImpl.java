@@ -17,9 +17,11 @@ import com.erp.erpbackend.models.payload.auth.SignUpPayload;
 import com.erp.erpbackend.models.payload.otp.OtpPayload;
 import com.erp.erpbackend.models.payload.otp.SignUpOTPRequest;
 import com.erp.erpbackend.models.response.LoginResponse;
+import com.erp.erpbackend.models.response.ProceedKeyResponse;
 import com.erp.erpbackend.services.branch.BranchService;
 import com.erp.erpbackend.services.course.CourseService;
 import com.erp.erpbackend.services.employee.EmployeeService;
+import com.erp.erpbackend.services.otp.OTPProceedTokenManager;
 import com.erp.erpbackend.services.otp.OptFactory;
 import com.erp.erpbackend.services.role.RoleService;
 import com.erp.erpbackend.services.user.UserService;
@@ -53,6 +55,7 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
     private final CourseService courseService;
     private final UserService userService;
     private final RoleService roleService;
+    private final OTPProceedTokenManager otpProceedTokenManager;
 
     @Override
     public LoginResponse login(LoginPayload loginPayload) {
@@ -77,7 +80,7 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
     }
 
     @Override
-    public void signUp(SignUpPayload payload) {
+    public ProceedKeyResponse signUp(SignUpPayload payload) {
 
         if (userService.checkByEmail(payload.getEmail())) {
             throw BaseException.of(EMAIL_ALREADY_REGISTERED);
@@ -103,11 +106,12 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
 
         employeeService.insert(Employee.builder().userId(user.getId()).build());
 
+        return ProceedKeyResponse.builder().proceedKey(otpProceedTokenManager.generate(user)).build();
     }
 
     @Override
     public void signUpOTP(OtpPayload payload) {
-        OptFactory.handle(payload.getChannel()).send(SendOTPDto.of("user","key"));
+        OptFactory.handle(payload.getChannel()).send(SendOTPDto.of("user", "key"));
     }
 
     @Override

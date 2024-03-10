@@ -6,6 +6,7 @@ import com.erp.erpbackend.models.payload.auth.SignUpPayload;
 import com.erp.erpbackend.models.payload.otp.OtpPayload;
 import com.erp.erpbackend.models.payload.otp.SignUpOTPRequest;
 import com.erp.erpbackend.models.response.LoginResponse;
+import com.erp.erpbackend.models.response.ProceedKeyResponse;
 
 public interface AuthBusinessService {
 
@@ -15,7 +16,7 @@ public interface AuthBusinessService {
 
     void logout();
 
-    void signUp(SignUpPayload payload);
+    ProceedKeyResponse signUp(SignUpPayload payload);
 
     void signUpOTP(OtpPayload payload);
 

@@ -7,6 +7,7 @@ import com.erp.erpbackend.models.payload.auth.RefreshTokenPayload;
 import com.erp.erpbackend.models.payload.auth.SignUpPayload;
 import com.erp.erpbackend.models.payload.otp.OtpPayload;
 import com.erp.erpbackend.models.response.LoginResponse;
+import com.erp.erpbackend.models.response.ProceedKeyResponse;
 import com.erp.erpbackend.services.security.AuthBusinessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,9 +39,8 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public BaseResponse<Void> signUp(@RequestBody SignUpPayload payload) {
-        authBusinessService.signUp(payload);
-        return BaseResponse.success();
+    public BaseResponse<ProceedKeyResponse> signUp(@RequestBody SignUpPayload payload) {
+        return BaseResponse.success(authBusinessService.signUp(payload));
     }
 
     @PostMapping("/sign-up/otp/request")
