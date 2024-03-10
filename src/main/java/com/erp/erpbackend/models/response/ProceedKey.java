@@ -2,12 +2,13 @@ package com.erp.erpbackend.models.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProceedKeyResponse {
+public class ProceedKey {
     String proceedKey;
 }

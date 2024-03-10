@@ -1,13 +1,13 @@
 package com.erp.erpbackend.controller;
 
 import com.erp.erpbackend.models.base.BaseResponse;
-import com.erp.erpbackend.models.payload.otp.SignUpOTPRequest;
+import com.erp.erpbackend.models.payload.auth.signup.SignUpOTPRequest;
 import com.erp.erpbackend.models.payload.auth.LoginPayload;
 import com.erp.erpbackend.models.payload.auth.RefreshTokenPayload;
-import com.erp.erpbackend.models.payload.auth.SignUpPayload;
-import com.erp.erpbackend.models.payload.otp.OtpPayload;
+import com.erp.erpbackend.models.payload.auth.signup.SignUpPayload;
+import com.erp.erpbackend.models.payload.auth.signup.SignUpOtpChannelRequest;
 import com.erp.erpbackend.models.response.LoginResponse;
-import com.erp.erpbackend.models.response.ProceedKeyResponse;
+import com.erp.erpbackend.models.response.ProceedKey;
 import com.erp.erpbackend.services.security.AuthBusinessService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,12 +39,12 @@ public class AuthController {
     }
 
     @PostMapping("/sign-up")
-    public BaseResponse<ProceedKeyResponse> signUp(@RequestBody SignUpPayload payload) {
+    public BaseResponse<ProceedKey> signUp(@RequestBody SignUpPayload payload) {
         return BaseResponse.success(authBusinessService.signUp(payload));
     }
 
     @PostMapping("/sign-up/otp/request")
-    public BaseResponse<Void> otpRequest(@RequestBody OtpPayload payload) {
+    public BaseResponse<Void> otpRequest(@RequestBody SignUpOtpChannelRequest payload) {
         authBusinessService.signUpOTP(payload);
         return BaseResponse.success();
     }

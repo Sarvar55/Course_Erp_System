@@ -4,6 +4,7 @@ import com.erp.erpbackend.exception.BaseException;
 import com.erp.erpbackend.models.dto.RefreshTokenDto;
 import com.erp.erpbackend.models.dto.SendOTPDto;
 import com.erp.erpbackend.models.enums.branch.BranchStatus;
+import com.erp.erpbackend.models.enums.user.UserStatus;
 import com.erp.erpbackend.models.mappers.CourseEntityMapper;
 import com.erp.erpbackend.models.mappers.UserEntityMapper;
 import com.erp.erpbackend.models.mybatis.branch.Branch;
@@ -13,16 +14,17 @@ import com.erp.erpbackend.models.mybatis.role.Role;
 import com.erp.erpbackend.models.mybatis.user.User;
 import com.erp.erpbackend.models.payload.auth.LoginPayload;
 import com.erp.erpbackend.models.payload.auth.RefreshTokenPayload;
-import com.erp.erpbackend.models.payload.auth.SignUpPayload;
-import com.erp.erpbackend.models.payload.otp.OtpPayload;
-import com.erp.erpbackend.models.payload.otp.SignUpOTPRequest;
+import com.erp.erpbackend.models.payload.auth.signup.SignUpPayload;
+import com.erp.erpbackend.models.payload.auth.signup.SignUpOtpChannelRequest;
+import com.erp.erpbackend.models.payload.auth.signup.SignUpOTPRequest;
 import com.erp.erpbackend.models.response.LoginResponse;
-import com.erp.erpbackend.models.response.ProceedKeyResponse;
+import com.erp.erpbackend.models.response.ProceedKey;
 import com.erp.erpbackend.services.branch.BranchService;
 import com.erp.erpbackend.services.course.CourseService;
 import com.erp.erpbackend.services.employee.EmployeeService;
 import com.erp.erpbackend.services.otp.OTPProceedTokenManager;
 import com.erp.erpbackend.services.otp.OptFactory;
+import com.erp.erpbackend.services.redis.RedisService;
 import com.erp.erpbackend.services.role.RoleService;
 import com.erp.erpbackend.services.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,7 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
     private final UserService userService;
     private final RoleService roleService;
     private final OTPProceedTokenManager otpProceedTokenManager;
+    private final RedisService redisService;
 
     @Override
     public LoginResponse login(LoginPayload loginPayload) {
@@ -80,7 +83,7 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
     }
 
     @Override
-    public ProceedKeyResponse signUp(SignUpPayload payload) {
+    public ProceedKey signUp(SignUpPayload payload) {
 
         if (userService.checkByEmail(payload.getEmail())) {
             throw BaseException.of(EMAIL_ALREADY_REGISTERED);
@@ -106,12 +109,15 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
 
         employeeService.insert(Employee.builder().userId(user.getId()).build());
 
-        return ProceedKeyResponse.builder().proceedKey(otpProceedTokenManager.generate(user)).build();
+        return ProceedKey.builder().proceedKey(otpProceedTokenManager.generate(user)).build();
     }
 
     @Override
-    public void signUpOTP(OtpPayload payload) {
-        OptFactory.handle(payload.getChannel()).send(SendOTPDto.of("user", "key"));
+    public void signUpOTP(SignUpOtpChannelRequest payload) {
+        User user = userService.getById(otpProceedTokenManager.getId(payload.getProceedKey()));
+        OptFactory.handle(payload.getChannel()).send(
+                SendOTPDto.of(payload.getChannel().getTarget(user), String.format("key-%s", user.getId()))
+        );
     }
 
     @Override
@@ -126,6 +132,13 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
     @Override
     public void signUpOTPConfirmation(SignUpOTPRequest payload) {
         log.info(payload.getOtp() + "confirmed");
+        User user = userService.getById(otpProceedTokenManager.getId(payload.getProceedKey()));
+
+        final String otp = redisService.get(String.format("key-%s", user.getId()));
+        if (payload.getOtp().equals(otp)) {
+            user.setStatus(UserStatus.ACTIVE);
+            userService.update(user);
+        }
 
     }
 

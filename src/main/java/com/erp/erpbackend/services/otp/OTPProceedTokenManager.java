@@ -5,6 +5,7 @@ import com.erp.erpbackend.models.mybatis.user.User;
 import com.erp.erpbackend.models.porperties.otp.OTPProperties;
 import com.erp.erpbackend.services.base.TokenGenerator;
 import com.erp.erpbackend.services.base.TokenReader;
+import com.erp.erpbackend.services.getters.IdGetter;
 import com.erp.erpbackend.utils.PublicPrivateKeyUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -21,7 +22,7 @@ import java.util.Date;
 @Component
 @AllArgsConstructor
 @Slf4j
-public class OTPProceedTokenManager implements TokenGenerator<User>, TokenReader<Claims> {
+public class OTPProceedTokenManager implements TokenGenerator<User>, TokenReader<Claims>, IdGetter<Long> {
 
     private final OTPProperties otpProperties;
 
@@ -50,5 +51,10 @@ public class OTPProceedTokenManager implements TokenGenerator<User>, TokenReader
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(otpProperties.getOtpJwtData().getSecretKey().getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Override
+    public Long getId(String token) {
+        return Long.valueOf(read(token).getSubject());
     }
 }

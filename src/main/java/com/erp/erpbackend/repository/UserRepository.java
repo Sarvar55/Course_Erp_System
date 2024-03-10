@@ -12,4 +12,8 @@ public interface UserRepository {
 
     //burada olan @Param("email") mybatis tarafında match işlemi için kullanılıyor. burada ne yazıldıysa diger tarafda da parametre olarak onu almak lazım
     Optional<User> findByEmail(@Param("email") String email);
+
+    Optional<User> findById(@Param("id") Long id);
+
+    void update(User user);
 }

@@ -6,7 +6,11 @@ public interface UserService {
 
     void insert(User user);
 
+    User getById(Long id);
+
     User getByEmail(String email);
 
     boolean checkByEmail(String email);
+
+    void update(User user);
 }

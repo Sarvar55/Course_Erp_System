@@ -15,13 +15,27 @@
         VALUES (#{name}, #{surname}, #{status}, #{roleId}, #{email}, #{phoneNumber}, #{password})
     </insert>
 
+     <insert id="update" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+            UPDATE users SET name=#{name}, surname=#{surname}, status=#{status}, role_id=#{roleId},
+                    email=#{email}, phone_number=#{phoneNumber}
+                WHERE id = #{id}
+     </insert>
+
     <select id="findByEmail" resultType="User">
         select
         <include refid="userBaseColumns"/>
         from users u
-        where u.email = #{email}
+        where u.id = #{id}
         and u.is_deleted = false
     </select>
+
+    <select id="findById" resultType="User">
+            select
+            <include refid="userBaseColumns"/>
+            from users u
+            where u.email = #{email}
+            and u.is_deleted = false
+        </select>
 
     <sql id="userBaseColumns">
         u.id
