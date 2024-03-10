@@ -103,7 +103,6 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
 
         employeeService.insert(Employee.builder().userId(user.getId()).build());
 
-
     }
 
     @Override

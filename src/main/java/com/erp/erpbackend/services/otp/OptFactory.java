@@ -18,7 +18,6 @@ public class OptFactory {
         return switch (channel) {
             case SMS -> smsOtpService;
             case EMAIL -> emailOtpService;
-
         };
     }
 
