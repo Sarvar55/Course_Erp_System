@@ -1,4 +1,4 @@
-package com.erp.erpbackend.models.porperties.security;
+package com.erp.erpbackend.models.porperties.otp;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -8,8 +8,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ConfigurationProperties("security")
+@ConfigurationProperties("otp")
 @Configuration
-public class SecurityProperties {
-    SecurityJwtData jwt;
+public class OTPProperties {
+    OTPJwtData otpJwtData;
+    Integer validityTime;
 }
